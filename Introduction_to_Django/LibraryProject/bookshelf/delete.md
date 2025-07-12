@@ -5,7 +5,7 @@ This documents clarify the steps for deleting the retrieved book instance in Dja
 ## Delete instance command
 
 ```python
-from bookshelf.models import Book
+from .models import Book
 
 deleted_book = Book.objects.get(title="Nineteen Eighty-Four")
 deleted_book.delete()

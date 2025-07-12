@@ -5,7 +5,7 @@ This documents clarify the steps and the expected output for updating the retrie
 ## Update instance command
 
 ```python
-from bookshelf.models import Book
+from .models import Book
 
 updated_book = Book.objects.get(title="1984")
 updated_book.title = "Nineteen Eighty-Four"

@@ -5,7 +5,7 @@ This documents clarify the steps and the expected output for retrieving a book i
 ## Retrieve instance command
 
 ```python
-from bookshelf.models import Book
+from .models import Book
 
 retrieved_book = Book.objects.get(title="1984")
 print(retrieved_book)

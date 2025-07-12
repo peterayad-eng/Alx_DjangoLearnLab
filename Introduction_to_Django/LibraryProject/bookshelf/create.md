@@ -5,7 +5,7 @@ This documents clarify the steps and the expected output for creating a new book
 ## Create a new instance command
 
 ```python
-from bookshelf.models import Book
+from .models import Book
 
 # Creating the Book instance
 new_book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
