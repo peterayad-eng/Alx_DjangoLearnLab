@@ -32,19 +32,20 @@ print("--- Sample Data Created ---")
 
 # Query all books by a specific author
 print("\n--- Query all books by J.K. Rowling ---")
-jk_rowling_books = Book.objects.filter(author__name="J.K. Rowling")
-for book in jk_rowling_books:
+author_name = "J.K. Rowling"
+author = Book.objects.filter(author__name=author_name)
+for book in author.books.all():
     print(f"- {book.title}")
 
 # List all books in a library
 print("\n--- List all books in Central Library ---")
-central_library = Library.objects.get(name="Central Library")
-for book in central_library.books.all():
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)
+for book in library.books.all():
     print(f"- {book.title}")
 
 # Retrieve the librarian for a library
 print("\n--- Retrieve the librarian for Community Library ---")
-community_library = Library.objects.get(name="Community Library")
-librarian = Librarian.objects.get(library=community_library)
+librarian = library.librarian
 print(f"- {librarian.name}")
 
