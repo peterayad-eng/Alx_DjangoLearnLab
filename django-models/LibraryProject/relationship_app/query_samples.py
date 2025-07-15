@@ -33,8 +33,10 @@ print("--- Sample Data Created ---")
 # Query all books by a specific author
 print("\n--- Query all books by J.K. Rowling ---")
 author_name = "J.K. Rowling"
-author = Book.objects.filter(author__name=author_name)
-for book in author.books.all():
+author = Author.objects.get(name=author_name)
+books_by_author = author.books.all()
+print(f"Books by {author.name}:")
+for book in books_by_author:
     print(f"- {book.title}")
 
 # List all books in a library
