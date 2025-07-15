@@ -47,6 +47,7 @@ for book in library.books.all():
 
 # Retrieve the librarian for a library
 print("\n--- Retrieve the librarian for Community Library ---")
-librarian = library.librarian
+community_library = Library.objects.get(name="Community Library")
+librarian = Librarian.objects.get(library=community_library)
 print(f"- {librarian.name}")
 
