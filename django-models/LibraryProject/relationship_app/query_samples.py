@@ -34,8 +34,7 @@ print("--- Sample Data Created ---")
 print("\n--- Query all books by J.K. Rowling ---")
 author_name = "J.K. Rowling"
 author = Author.objects.get(name=author_name)
-books_by_author = author.books.all()
-print(f"Books by {author.name}:")
+books_by_author = Book.objects.filter(author=author)
 for book in books_by_author:
     print(f"- {book.title}")
 
