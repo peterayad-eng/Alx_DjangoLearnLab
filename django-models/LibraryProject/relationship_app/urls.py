@@ -8,5 +8,10 @@ urlpatterns = [
     
     # Class-based view for displaying library details
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+    
+    # Authentication URLs
+    path('login/', views.login_view.as_view(), name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.RegisterView, name='register'),
 ]
 
