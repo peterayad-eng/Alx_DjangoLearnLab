@@ -43,25 +43,28 @@ def LogoutView(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
+# Role checking functions
+def is_admin(user):
+    """Check if user has Admin role"""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
-def check_role(user, role):
-    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == role
+def is_librarian(user):
+    """Check if user has Librarian role"""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
 
-def role_required(role):
-    return user_passes_test(lambda u: check_role(u, role))
+def is_member(user):
+    """Check if user has Member role"""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
-@login_required
-@role_required('Admin')
+@user_passes_test(is_admin)
 def Admin(request):
     return render(request, 'relationship_app/admin_view.html')
 
-@login_required
-@role_required('Librarian')
+@user_passes_test(is_librarian)
 def Librarian(request):
     return render(request, 'relationship_app/librarian_view.html')
 
-@login_required
-@role_required('Member')
+@user_passes_test(is_librarian)
 def Member(request):
     return render(request, 'relationship_app/member_view.html')
 
