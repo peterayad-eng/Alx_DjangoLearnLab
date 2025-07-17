@@ -25,12 +25,12 @@ class LibraryDetailView(DetailView):
         context['library'].books.select_related('author').all()
         return context
 
-class RegisterView(CreateView):
+class register(CreateView):
     form_class = UserCreationForm
     template_name = 'relationship_app/register.html'
     success_url = reverse_lazy('login')
 
-class login_view(LoginView):
+class LoginView(LoginView):
     template_name = 'relationship_app/login.html'
     redirect_authenticated_user = True
 
@@ -38,7 +38,7 @@ class login_view(LoginView):
         return '/relationship_app/books/'
 
 @login_required
-def logout_view(request):
+def LogoutView(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
