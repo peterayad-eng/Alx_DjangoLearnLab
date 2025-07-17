@@ -52,16 +52,16 @@ def role_required(role):
 
 @login_required
 @role_required('Admin')
-def admin_view(request):
+def Admin(request):
     return render(request, 'relationship_app/admin_view.html')
 
 @login_required
 @role_required('Librarian')
-def librarian_view(request):
+def Librarian(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 @login_required
 @role_required('Member')
-def member_view(request):
+def Member(request):
     return render(request, 'relationship_app/member_view.html')
 
