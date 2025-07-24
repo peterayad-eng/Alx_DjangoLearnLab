@@ -10,7 +10,6 @@ class BookAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 
-@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'date_of_birth')
@@ -31,4 +30,6 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'first_name', 'last_name', 'date_of_birth', 'profile_photo', 'password1', 'password2', 'is_staff', 'is_active')}
         ),
     )
+
+admin.site.register(CustomUser, CustomUserAdmin)
 
