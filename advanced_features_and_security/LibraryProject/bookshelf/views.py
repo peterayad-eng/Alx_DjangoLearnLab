@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from .models import Book
 from .forms import BookForm
+from .forms import ExampleForm
 
 # Create your views here.
 @login_required
