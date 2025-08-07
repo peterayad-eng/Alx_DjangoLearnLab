@@ -4,6 +4,8 @@ from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 from datetime import datetime
 from rest_framework.exceptions import ValidationError
+from django_filters import rest_framework
+from rest_framework import filters
 
 # Create your views here.
 class BookListView(generics.ListCreateAPIView):
@@ -14,6 +16,21 @@ class BookListView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    # Add filtering, searching, ordering
+    filter_backends = [
+        rest_framework.DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter
+    ]
+    filterset_fields = {
+        'title': ['exact'],
+        'author__name': ['exact'],
+        'publication_year': ['exact', 'gt', 'lt']
+    }
+    search_fields = ['title', 'author__name']
+    ordering_fields = '__all__'
+    ordering = ['title']
 
     def perform_create(self, serializer):
         year = serializer.validated_data.get('publication_year', 0)
