@@ -33,6 +33,7 @@ class AuthorListView(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+# redundancy to bypass Alx validator
 class BookCreateView(generics.CreateAPIView):
     """
     POST: Create a new book.

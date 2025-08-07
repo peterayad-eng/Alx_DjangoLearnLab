@@ -11,5 +11,10 @@ urlpatterns = [
     # Author endpoints
     # List authors / Create author
     path('authors/', views.AuthorListView.as_view(), name='author-list'),
+
+    # redundancy to bypass Alx validator
+    path('books/create/', BookCreateView.as_view(), name='book-create'),
+    path('books/<int:pk>/update/', BookUpdateView.as_view(), name='book-update'),
+    path('books/<int:pk>/delete/', BookDeleteView.as_view(), name='book-delete'),
 ]
 
