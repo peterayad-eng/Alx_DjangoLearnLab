@@ -1,3 +1,35 @@
 from django.shortcuts import render
+from rest_framework import generics, permissions
+from .models import Book, Author
+from .serializers import BookSerializer, AuthorSerializer
+from datetime import datetime
+from rest_framework.exceptions import ValidationError
 
 # Create your views here.
+class BookListView(generics.ListCreateAPIView):
+    """
+    GET: List all books
+    POST: Create a new book (Authenticated only)
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        year = serializer.validated_data.get('publication_year', 0)
+        if year > datetime.now().year:
+            raise ValidationError({"publication_year": "Future dates not allowed"})
+        serializer.save()
+
+class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """GET/PUT/PATCH/DELETE: Single book operations"""
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class AuthorListView(generics.ListCreateAPIView):
+    """GET: List authors | POST: Create author"""
+    queryset = Author.objects.prefetch_related('books')
+    serializer_class = AuthorSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
