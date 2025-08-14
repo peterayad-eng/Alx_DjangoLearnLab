@@ -65,7 +65,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
 
-def add_comment(request, pk):
+def CommentCreateView(request, pk):
     """Handle adding a comment to a post."""
     post = get_object_or_404(Post, pk=pk)
 
