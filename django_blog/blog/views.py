@@ -117,14 +117,14 @@ def post_search(request):
     posts = Post.objects.all()
 
     if query:
-        posts = posts.filter(
+        posts = Post.objects.filter(
             Q(title__icontains=query) |
             Q(content__icontains=query) |
             Q(tags__name__icontains=query)
         ).distinct()
 
     if tag:
-        posts = posts.filter(tags__name__iexact=tag)
+        posts = Post.objects.filter(tags__name__iexact=tag)
 
     return render(request, 'blog/post_list.html', {'posts': posts, 'query': query, 'tag': tag})
 
