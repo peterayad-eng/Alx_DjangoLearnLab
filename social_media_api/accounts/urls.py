@@ -3,6 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import RegisterView, LoginView, ProfileView, UserViewSet
 
 # Create a router and register the ViewSet
+# unfollow/<int:user_id>/
+# follow/<int:user_id>/
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 
