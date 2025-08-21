@@ -32,9 +32,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if user.is_authenticated:
             # include posts from the user + people they follow
             following_users = user.following.all()
-            return Post.objects.filter(
-                author__in=list(following_users) + [user]
-            ).order_by('-created_at')
+            return Post.objects.filter(author__in=following_users.order_by('-created_at')
         # for unauthenticated users, return all posts (or empty if you prefer stricter privacy)
         return Post.objects.all().order_by('-created_at')
 
