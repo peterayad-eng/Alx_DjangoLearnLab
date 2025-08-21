@@ -11,3 +11,16 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    def follow_user(self, user_to_follow):
+        """Makes this user follow another user."""
+        if user_to_follow != self:
+            self.followers.add(user_to_follow)
+
+    def unfollow_user(self, user_to_unfollow):
+        """Makes this user unfollow another user."""
+        self.followers.remove(user_to_unfollow)
+
+    def is_following(self, user):
+        """Checks if this user is following another user."""
+        return self.followers.filter(pk=user.pk).exists()
+

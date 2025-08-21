@@ -41,6 +41,14 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=["get"], permission_classes=[permissions.IsAuthenticated])
+    def feed(self, request):
+        user = request.user
+        followed_users = user.following.all()
+        posts = Post.objects.filter(author__in=followed_users).order_by("-created_at")
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+
 class CommentViewSet(viewsets.ModelViewSet):
     """
     A ViewSet for viewing and managing comments.
