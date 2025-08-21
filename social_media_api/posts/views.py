@@ -21,12 +21,22 @@ class PostViewSet(viewsets.ModelViewSet):
     """
     A ViewSet for viewing and managing posts.
     """
-    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content']
     ordering_fields = ['created_at', 'updated_at']
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            # include posts from the user + people they follow
+            following_users = user.following.all()
+            return Post.objects.filter(
+                author__in=list(following_users) + [user]
+            ).order_by('-created_at')
+        # for unauthenticated users, return all posts (or empty if you prefer stricter privacy)
+        return Post.objects.all().order_by('-created_at')
 
     def perform_create(self, serializer):
         # The author is automatically set to the current user on creation
@@ -39,14 +49,6 @@ class PostViewSet(viewsets.ModelViewSet):
         post = self.get_object()
         comments = post.comments.all().order_by('-created_at')
         serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=["get"], permission_classes=[permissions.IsAuthenticated])
-    def feed(self, request):
-        user = request.user
-        followed_users = user.following.all()
-        posts = Post.objects.filter(author__in=followed_users).order_by("-created_at")
-        serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
 
 class CommentViewSet(viewsets.ModelViewSet):
