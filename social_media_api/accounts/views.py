@@ -52,7 +52,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly] # Allow viewing users without auth, but need auth to follow
-
+    
+    # permissions.IsAuthenticated
+    # CustomUser.objects.all()
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def follow(self, request, pk=None):
         user_to_follow = self.get_object()
