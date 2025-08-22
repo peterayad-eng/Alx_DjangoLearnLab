@@ -1,9 +1,13 @@
+from rest_framework import generics, status
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer
+from notifications.models import Notification
+from notifications.serializers import NotificationSerializer
 
 # Create your views here.
 class IsAuthorOrReadOnly(permissions.BasePermission):
@@ -60,4 +64,36 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # The author is automatically set to the current user on creation
         serializer.save(author=self.request.user)
+
+class LikePostView(generics.GenericAPIView):
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if created:
+            # Create notification for post author
+            if request.user != post.author:
+                Notification.objects.create(
+                    recipient=post.author,
+                    actor=request.user,
+                    verb="liked your post",
+                    target=post,
+                )
+            return Response({"message": "Post liked!"}, status=status.HTTP_201_CREATED)
+        return Response({"message": "You already liked this post"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UnlikePostView(generics.GenericAPIView):
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        like = Like.objects.filter(user=request.user, post=post).first()
+        if like:
+            like.delete()
+            return Response({"message": "Post unliked!"}, status=status.HTTP_200_OK)
+        return Response({"message": "You haven’t liked this post yet"}, status=status.HTTP_400_BAD_REQUEST)
 
